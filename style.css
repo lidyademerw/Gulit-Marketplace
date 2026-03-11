@@ -1,0 +1,123 @@
+/* General Navbar Styles */
+.navbar {
+  background-color: whitesmoke;
+  padding: 10px 20px;
+  margin: 10px;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
+  padding: 0;
+  margin: 0;
+}
+
+.nav-item {
+  text-decoration: none;
+  color: black;
+  font-weight: lighter;
+  font-family: "Comic Sans MS", cursive, sans-serif;
+  font-size: 16px;
+}
+
+.has-submenu {
+  position: relative;
+  text-align: center;
+}
+
+.submenu {
+  max-height: 0; /* Start hidden */
+  overflow: hidden; /* Hide the text inside */
+  transition: max-height 0.4s ease-out; /* This creates the "slide" */
+  display: flex;
+  flex-direction: column;
+  background: rgb(78, 75, 75);
+}
+
+.submenu a {
+  text-decoration: none;
+  color: white;
+  padding: 5px 0;
+  font-size: 14px;
+}
+
+/* The class JS will add to make it slide down */
+.submenu.open {
+  max-height: 100px; /* Adjust based on content size */
+}
+/* Container to help position the search bar */
+.search-container {
+  display: flex;
+  align-items: center;
+  background: white;
+  border: 1px solid #2d8a3d; /* Green border */
+  border-radius: 20px;
+  padding: 2px 10px;
+  margin-left: 20px; /* Space between links and search */
+}
+
+/* The actual text box */
+#search-input {
+  border: none;
+  outline: none;
+  padding: 8px;
+  font-size: 14px;
+  width: 150px; /* Short for now, grows on desktop */
+  transition: width 0.3s;
+}
+
+/* Grows when you click it */
+#search-input:focus {
+  width: 250px;
+}
+
+/* The search button/icon */
+#search-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  color: #2d8a3d;
+}
+
+/* Responsive: Move search below links on small screens */
+@media (max-width: 800px) {
+  .nav-links {
+    flex-direction: column;
+    align-items: center;
+  }
+  .search-container {
+    margin: 10px 0;
+    width: 80%;
+  }
+}
+#search-input {
+  border: none;
+  outline: none;
+  padding: 8px;
+  font-size: 14px;
+  width: 150px; /* Short for now, grows on desktop */
+  transition: width 0.3s;
+}
+#search-input:focus {
+  width: 250px;
+}
+#search-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  color: #2d8a3d;
+}
+@media (max-width: 800px) {
+  .nav-links {
+    flex-direction: column;
+    align-items: center;
+  }
+  .search-container {
+    margin: 10px 0;
+    width: 80%;
+  }
+}

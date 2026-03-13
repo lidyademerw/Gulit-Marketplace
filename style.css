@@ -171,11 +171,9 @@
   transform: rotate(10deg);
 }
 
-
 .tilted-img:hover {
   transform: rotate(0deg) scale(1.05) !important;
 }
-
 
 @media (max-width: 900px) {
   .hero-content {
@@ -277,4 +275,52 @@
 
 .product-card:hover {
   transform: translateY(-5px);
+}
+.submenu {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  padding-left: 10px; /* Indent sub-items slightly */
+}
+
+.submenu.open {
+  max-height: 200px; /* Adjust based on your content */
+}
+.section-separator {
+  background-color: #2d8a3d; /* Your brand green */
+  color: white; /* White letters */
+  width: 100%; /* Stretch across the page */
+  padding: 15px 40px; /* Height and left-side spacing */
+  margin: 40px 0 20px 0; /* Space above and below the bar */
+  box-sizing: border-box;
+}
+
+.section-separator h2 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+.section-separator {
+  background-color: #2d8a3d; /* Your brand green */
+  color: white; /* White letters */
+  width: 100%;
+  padding: 15px 0; /* Top and bottom padding */
+  margin: 50px 0 30px 0; /* Space above and below the bar */
+
+  /* Centering Logic */
+  display: flex; /* Use flexbox */
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+}
+
+.section-separator h2 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  text-align: center; /* Fallback for older browsers */
 }

@@ -32,3 +32,17 @@ homeLink.addEventListener("click", (e) => {
   kemisPage.style.display = "none";
   homeSection.style.display = "flex";
 });
+// Add jewelry to your pages object
+const pages = {
+  home: document.getElementById("home-section"),
+  kemis: document.getElementById("kemis-page"),
+  mesob: document.getElementById("mesob-page"),
+  shkla: document.getElementById("shkla-page"),
+  jewelry: document.getElementById("jewelry-page"), // New line
+};
+
+// Add the event listener for the Jewelry Nav link
+document.getElementById("nav-jewelry").addEventListener("click", (e) => {
+  e.preventDefault();
+  showPage("jewelry");
+});

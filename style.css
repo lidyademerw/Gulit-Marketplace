@@ -1,26 +1,142 @@
-.navbar {
-  background-color: whitesmoke;
-  padding: 10px 20px;
-  margin: 10px;
+/* 1. This enables the "Slide" effect across the whole site */
+html {
+  scroll-behavior: smooth;
 }
 
-.nav-links {
-  list-style: none;
+/* 2. Since your navbar is at the top, we need a 'scroll-margin' 
+      so the navbar doesn't cover your titles when it slides. */
+.page-section,
+.hero,
+#market-view {
+  scroll-margin-top: 80px; /* Adjust this to match your navbar height */
+}
+
+/* 3. Keep the hero as flex but still visible */
+.hero {
   display: flex;
-  justify-content: space-around;
-  align-items: flex-start;
-  padding: 0;
-  margin: 0;
 }
 
+/* 4. Ensure the Info page and other pages are also visible in the scroll list */
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  overflow-x: hidden; /* This is the "magic" line that kills the horizontal scrollbar */
+  box-sizing: border-box;
+}
+
+/* 2. Apply border-box to EVERY element */
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+/* 3. Ensure the Hero Section doesn't let tilted images stick out */
+.hero {
+  overflow: hidden; /* This hides the invisible corners of the tilted photos */
+  width: 100%;
+}
+
+/* 4. Fix the Navbar from being too wide */
+.navbar {
+  width: 100%;
+  max-width: 100vw; /* Forces it to stay within the viewport width */
+  margin: 0;
+  box-sizing: border-box;
+}
+
+/* 5. Fix the Market View wrapper */
+#market-view {
+  width: 100%;
+  overflow-x: hidden;
+}
+.navbar {
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: space-between; /* Links on left, Search on right */
+  align-items: center;
+  background-color: white;
+
+  /* We will reduce the right padding to 20px so it sits closer to the edge */
+  padding: 10px 20px 10px 40px;
+
+  width: 100%;
+  box-sizing: border-box; /* Important: prevents the bar from being wider than screen */
+  border-bottom: 1px solid #eee;
+}
+
+.search-container {
+  display: flex;
+  align-items: center;
+  /* Remove any margin-left that might be pushing it away from the edge */
+  margin-left: 0;
+}
+
+#search-input {
+  /* If your search input is too small, it looks like there is empty space */
+  width: 250px;
+  padding: 8px 15px;
+  border: 1px solid #2d8a3d;
+  border-radius: 20px 0 0 20px;
+  outline: none;
+}
+
+#search-btn {
+  border: 1px solid #2d8a3d;
+  border-left: none; /* Connect it to the input */
+  background: white;
+  padding: 8px 15px;
+  border-radius: 0 20px 20px 0;
+  cursor: pointer;
+  color: #2d8a3d;
+}
+
+/* 2. The Horizontal List */
+.nav-links {
+  display: flex !important;
+  flex-direction: row !important;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: 25px; /* Adjust this to give more/less space between words */
+  align-items: center;
+}
+
+/* 3. The Links */
 .nav-item {
   text-decoration: none;
-  color: black;
-  font-weight: lighter;
-  font-family: "Comic Sans MS", cursive, sans-serif;
-  font-size: 16px;
+  color: #2d8a3d;
+  font-weight: bold;
+  font-size: 15px;
+  white-space: nowrap; /* Keeps text on one line */
 }
 
+/* 4. The Search Box */
+.search-container {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.nav-item:hover {
+  color: #ce3a3a; /* Turns Red on hover */
+}
+
+/* 4. The Search Bar Container */
+.search-container {
+  display: flex;
+  align-items: center;
+  margin-left: 20px; /* Extra gap from the last link */
+}
+
+/* 5. Fix for the Market View wrapper */
+#market-view {
+  width: 100%;
+  display: block;
+}
 .has-submenu {
   position: relative;
   text-align: center;
@@ -398,7 +514,11 @@
   }
 }
 .page-section {
-  display: none; /* Hide everything at the start */
+  display: block;
+  width: 100%;
+}
+#home-section {
+  display: flex; /* Keeps your tilted images layout */
 }
 /* This makes the whole page slide smoothly when moving between sections */
 html {
@@ -410,10 +530,323 @@ html {
 .page-section,
 .hero {
   scroll-margin-top: 80px; /* Adjust this to the height of your navbar */
-  display: block !important; /* All sections must be visible to be able to scroll to them */
+  /* All sections must be visible to be able to scroll to them */
 }
 
 /* Ensure the hero section is visible too */
 .hero {
   display: flex !important;
+}
+/* The background that covers the whole screen */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7); /* Dark semi-transparent background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000; /* Makes sure it's on top of everything */
+}
+
+/* The White Box in the center */
+.modal-content {
+  background: white;
+  padding: 30px;
+  border-radius: 20px;
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+/* Close Button (The X) */
+.close-x {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  background: none;
+  border: none;
+  font-size: 30px;
+  cursor: pointer;
+  color: #888;
+}
+
+/* Payment Buttons inside the popup */
+.payment-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.pay-option {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  padding: 15px;
+  border: 2px solid #f0f0f0;
+  border-radius: 12px;
+  background: white;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.pay-option:hover {
+  border-color: #2d8a3d; /* Gulit Green */
+  background: #f0fdf4;
+}
+
+#telebirr-btn {
+  color: #0088cc;
+} /* Telebirr Blue */
+#cbe-btn {
+  color: #8a2be2;
+} /* CBE Purple-ish */
+#paypal-btn {
+  color: #003087;
+} /* PayPal Blue */
+.submenu.open {
+  max-height: 200px; /* Or whatever height fits your two items */
+  transition: max-height 0.4s ease-in-out;
+}
+/* 1. Hide the mobile bar by default (on Desktop) */
+.mobile-bottom-nav {
+  display: none;
+}
+
+/* 2. Mobile Specific Styles (Screens smaller than 768px) */
+@media (max-width: 768px) {
+  /* Hide the top desktop navbar */
+  .navbar {
+    display: none !important;
+  }
+
+  /* Show the bottom nav bar */
+  .mobile-bottom-nav {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 70px;
+    background: white;
+    border-top: 1px solid #ddd;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 3000;
+    padding-bottom: 10px; /* Space for home indicator on new phones */
+  }
+
+  /* Style the buttons like your drawing */
+  .mobile-nav-btn {
+    background: none;
+    border: 1px solid #ccc; /* The square border from your drawing */
+    border-radius: 12px;
+    padding: 8px 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 60px;
+    transition: 0.2s;
+  }
+
+  .nav-icon {
+    font-size: 20px;
+  }
+  .nav-text {
+    font-size: 12px;
+    color: #555;
+    margin-top: 2px;
+  }
+
+  /* The Plus Button Styling */
+  .plus-icon {
+    font-size: 30px;
+    font-weight: bold;
+    color: #2d8a3d;
+  }
+
+  .mobile-nav-btn:active {
+    background-color: #f0fdf4;
+    border-color: #2d8a3d;
+  }
+}
+/* This section only works for mobile screens (phones) */
+@media (max-width: 600px) {
+  /* 1. Force 2 images per row */
+  .product-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important; /* 2 equal columns */
+    gap: 10px !important; /* Smaller space between cards */
+    padding: 10px !important; /* Space at the edges of the phone */
+  }
+
+  /* 2. Fix the Image height so it doesn't look like a needle */
+  .product-card img {
+    height: 180px !important; /* Shorter height for the 2-column view */
+    width: 100% !important;
+    object-fit: cover !important;
+    border-radius: 8px !important;
+  }
+
+  /* 3. Fix the Button stretching (from your previous issue) */
+  .cart-btn {
+    height: auto !important; /* Let the button be natural height */
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    font-size: 12px !important; /* Smaller text for small cards */
+    padding: 8px 4px !important;
+    margin-top: 5px !important;
+  }
+
+  /* 4. Ensure the cart icon stays small inside the button */
+  .cart-btn img {
+    width: 14px !important;
+    height: 14px !important;
+    margin: 0 !important;
+  }
+
+  /* 5. Clean up the card info spacing */
+  .price-box {
+    padding: 5px !important;
+    margin-top: 5px !important;
+  }
+
+  .price-text {
+    font-size: 14px !important;
+  }
+}
+@media (max-width: 600px) {
+  /* 1. Add extra space at the very bottom of the body 
+          so the last item (Location) isn't hidden by the navbar */
+  body {
+    padding-bottom: 120px !important;
+  }
+
+  /* 2. Fix the Info Page spacing specifically */
+  #info-page {
+    padding-bottom: 50px !important;
+  }
+
+  /* 3. Ensure the contact cards don't get too close to the bottom */
+  .contact-links {
+    margin-bottom: 30px;
+  }
+}
+.upload-container {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Big Camera Box */
+.photo-upload-box {
+  width: 100%;
+  height: 250px;
+  background: #f0fdf4;
+  border: 3px dashed #2d8a3d;
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+#photo-preview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.camera-icon {
+  font-size: 50px;
+}
+
+/* Form Styles */
+.upload-form {
+  margin-top: 30px;
+}
+
+.input-group {
+  margin-bottom: 20px;
+}
+
+.input-group label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+/* Visual Category Picker */
+.category-grid-picker {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin: 15px 0 30px 0;
+}
+
+.cat-option {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  text-align: center;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.cat-option.selected {
+  background: #2d8a3d;
+  color: white;
+  border-color: #2d8a3d;
+}
+
+/* Final Post Button */
+.main-post-btn {
+  width: 100%;
+  background: #2d8a3d;
+  color: white;
+  padding: 18px;
+  border: none;
+  border-radius: 15px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 10px 20px rgba(45, 138, 61, 0.2);
+}
+#upload-page,
+#info-page {
+  display: none;
+}
+/* Ensure the desktop navbar stays horizontal */
+
+/* Make sure the market-view doesn't mess up the layout on desktop */
+#market-view {
+  display: block; /* Standard block for desktop */
+  width: 100%;
+}
+
+/* 3. Make sure the list items don't have block-level behavior */
+.nav-links li {
+  display: inline-block;
 }

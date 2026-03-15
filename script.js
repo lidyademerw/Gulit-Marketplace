@@ -209,3 +209,15 @@ if (postBtn) {
     }
   });
 }
+function showAuthScreen(screenId) {
+  // Hide all auth cards
+  document.getElementById("auth-welcome").style.display = "none";
+  document.getElementById("auth-signup").style.display = "none";
+  document.getElementById("auth-login").style.display = "none";
+
+  // Show the requested one
+  const target = document.getElementById(screenId);
+  if (target) {
+    target.style.display = "block";
+  }
+}

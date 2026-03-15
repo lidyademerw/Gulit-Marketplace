@@ -5,38 +5,49 @@
     <meta name="viewport" content="width=, initial-scale=1.0" />
     <title>Gulit-Marketplace</title>
     <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    />
   </head>
   <body>
     <nav class="navbar">
       <ul class="nav-links">
-        <div class="nav-wrapper">
-          <li><a href="#" class="nav-item">home</a></li>
-          <li><a href="#" class="nav-item">ሐበሻ ቀሚስ </a></li>
+        <!-- Replace the content of your ul with this -->
+        <li>
+          <a href="#" class="nav-item"><i class="fas fa-home"></i> home</a>
+        </li>
+        <li>
+          <a href="#" class="nav-item"><i class="fas fa-vest"></i> ሐበሻ ቀሚስ</a>
+        </li>
 
-          <li class="has-submenu">
-            <a href="#" class="nav-item" id="cultural-trigger"
-              >ethiopian cultural materials</a
-            >
-            <div class="submenu" id="cultural-menu">
-              <!-- Sub-items with IDs for the JS to find -->
-              <a href="#" id="nav-mesob">ሙሶብ (Mesob)</a>
-              <a href="#" id="nav-shkla">ሸክላ (Shkla)</a>
-            </div>
-          </li>
+        <li class="has-submenu">
+          <a href="#" class="nav-item" id="cultural-trigger">
+            <i class="fas fa-palette"></i> cultural materials
+            <i class="fas fa-chevron-down small-arrow"></i>
+          </a>
+          <div class="submenu" id="cultural-menu">
+            <a href="#" id="nav-mesob">ሙሶብ (Mesob)</a>
+            <a href="#" id="nav-shkla">ሸክላ (Shkla)</a>
+          </div>
+        </li>
 
-          <li><a href="#" class="nav-item">Habesha jewelry</a></li>
-          <li><a href="#" class="nav-item">ቅመማቅመም</a></li>
-          <li><a href="#" class="nav-item">Info</a></li>
-        </div>
+        <li>
+          <a href="#" class="nav-item"><i class="fas fa-gem"></i> jewelry</a>
+        </li>
+        <li>
+          <a href="#" class="nav-item"><i class="fas fa-leaf"></i> ቅመማቅመም</a>
+        </li>
+        <li>
+          <a href="#" class="nav-item"
+            ><i class="fas fa-info-circle"></i> Info</a
+          >
+        </li>
       </ul>
 
       <div class="search-container">
-        <input
-          type="text"
-          placeholder="ፈልግ... (Search items)"
-          id="search-input"
-        />
-        <button id="search-btn">🔍</button>
+        <input type="text" placeholder="Search..." id="search-input" />
+        <button id="search-btn"><i class="fas fa-search"></i></button>
       </div>
     </nav>
     <div id="market-view">
@@ -1015,83 +1026,172 @@
           </div>
         </div>
       </section>
-    </div>
-    <!-- Info Section -->
-    <section id="info-page" class="page-section">
-      <div class="section-separator">
-        <h2>ስለ እኛ (About Gulit)</h2>
-      </div>
-
-      <div class="info-container">
-        <!-- The Story Part -->
-        <div class="info-story">
-          <h3>Our Mission</h3>
-          <p>
-            ጉሊት (Gulit) is more than a marketplace. We are a bridge between
-            talented Ethiopian craftswomen and the world. By removing technical
-            barriers, we ensure that every artisan can showcase her work and
-            receive a fair price for her heritage and skill.
-          </p>
-
-          <h3>How it Works</h3>
-          <ul class="info-list">
-            <li>
-              <strong>Browse:</strong> Discover unique, hand-crafted Ethiopian
-              items.
-            </li>
-            <li>
-              <strong>Direct Connect:</strong> Call the artisan directly to ask
-              questions.
-            </li>
-            <li>
-              <strong>Empower:</strong> Your purchase supports local families
-              and preserves our culture.
-            </li>
-          </ul>
+      <section id="info-page" class="page-section">
+        <div class="section-separator">
+          <h2>ስለ እኛ (About Gulit)</h2>
         </div>
 
-        <!-- The Contact Part -->
-        <div class="info-contact">
-          <h3>Get in Touch</h3>
-          <p>Have a question or need help with an order?</p>
+        <div class="info-container">
+          <!-- The Story Part -->
+          <div class="info-story">
+            <h3>Our Mission</h3>
+            <p>
+              ጉሊት (Gulit) is more than a marketplace. We are a bridge between
+              talented Ethiopian craftswomen and the world. By removing
+              technical barriers, we ensure that every artisan can showcase her
+              work and receive a fair price for her heritage and skill.
+            </p>
 
-          <div class="contact-links">
-            <a href="tel:+251900000000" class="contact-card">
-              <span class="icon">📞</span>
-              <span>Call Us: +251 900 000 000</span>
-            </a>
+            <h3>How it Works</h3>
+            <ul class="info-list">
+              <li>
+                <strong>Browse:</strong> Discover unique, hand-crafted Ethiopian
+                items.
+              </li>
+              <li>
+                <strong>Direct Connect:</strong> Call the artisan directly to
+                ask questions.
+              </li>
+              <li>
+                <strong>Empower:</strong> Your purchase supports local families
+                and preserves our culture.
+              </li>
+            </ul>
+          </div>
 
-            <a
-              href="https://t.me/Gulit_Support"
-              target="_blank"
-              class="contact-card"
-            >
-              <span class="icon">✈️</span>
-              <span>Chat on Telegram</span>
-            </a>
+          <!-- The Contact Part -->
+          <div class="info-contact">
+            <h3>Get in Touch</h3>
+            <p>Have a question or need help with an order?</p>
 
-            <div class="contact-card">
-              <span class="icon">📍</span>
-              <span>Addis Ababa, Ethiopia</span>
+            <div class="contact-links">
+              <a href="tel:+251900000000" class="contact-card">
+                <span class="icon">📞</span>
+                <span>Call Us: +251 900 000 000</span>
+              </a>
+
+              <a
+                href="https://t.me/Gulit_Support"
+                target="_blank"
+                class="contact-card"
+              >
+                <span class="icon">✈️</span>
+                <span>Chat on Telegram</span>
+              </a>
+
+              <div class="contact-card">
+                <span class="icon">📍</span>
+                <span>Addis Ababa, Ethiopia</span>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </div>
+    <!-- Info Section -->
+
     <section id="profile-page" class="page-section" style="display: none">
-      <div class="section-separator">
-        <h2>የእኔ ማህደር (My Profile)</h2>
-      </div>
-      <div class="upload-container">
-        <div class="profile-header" style="text-align: center; padding: 20px">
-          <span style="font-size: 50px">👤</span>
-          <h3>የአቅራቢ ስም (User Name)</h3>
-          <p>Addis Ababa, Ethiopia</p>
+      <div class="auth-container">
+        <!-- SCREEN 1: WELCOME/INTRO -->
+        <div id="auth-welcome" class="auth-card">
+          <div class="auth-logo">🛒</div>
+          <h2>Welcome to <span class="brand-name">GULIT</span>. let's Shop</h2>
+          <div class="auth-hero-img">
+            <img src="image/homepage1.jpg" alt="Shopping" />
+          </div>
+          <div class="pagination-dots">
+            <span class="dot active"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+          </div>
+          <button
+            class="auth-btn-primary"
+            onclick="showAuthScreen('auth-signup')"
+          >
+            Continue
+          </button>
         </div>
 
-        <hr />
-        <h4>የለጠፏቸው ምርቶች (Post History)</h4>
-        <p style="color: #888">ምንም የተለጠፈ ምርት የለም (No items posted yet).</p>
+        <!-- SCREEN 2: SIGN UP -->
+        <div id="auth-signup" class="auth-card" style="display: none">
+          <div class="auth-header">
+            <h2>Sign Up</h2>
+            <p>Hello there, sign up to continue.</p>
+          </div>
+          <div class="auth-form">
+            <div class="auth-input-group">
+              <label>Name</label>
+              <input type="text" placeholder="Enter your full name" />
+            </div>
+            <div class="auth-input-group">
+              <label>Email</label>
+              <input type="email" placeholder="Enter your email" />
+            </div>
+            <div class="auth-input-group">
+              <label>Password</label>
+              <input type="password" placeholder="Enter your password" />
+            </div>
+            <button
+              class="auth-btn-primary"
+              onclick="showAuthScreen('auth-login')"
+            >
+              Continue
+            </button>
+          </div>
+          <div class="auth-footer">
+            <p>OR Sign up with</p>
+            <div class="social-icons">
+              <button class="social-btn">G</button>
+              <button class="social-btn">f</button>
+              <button class="social-btn">t</button>
+            </div>
+            <p class="terms">
+              By continuing you confirm that you agree with our Term & Condition
+            </p>
+          </div>
+        </div>
+
+        <!-- SCREEN 3: LOGIN -->
+        <div id="auth-login" class="auth-card" style="display: none">
+          <div class="auth-header">
+            <h2>Good Afternoon!</h2>
+            <p>Welcome to Gulit Mart</p>
+          </div>
+          <div class="auth-form">
+            <div class="auth-input-group">
+              <label>Email</label>
+              <input type="email" placeholder="Enter your email" />
+            </div>
+            <div class="auth-input-group">
+              <label>Password</label>
+              <input type="password" placeholder="Enter your password" />
+            </div>
+            <div class="auth-extra">
+              <label><input type="checkbox" /> Remember Me</label>
+              <a href="#">Reset Password?</a>
+            </div>
+            <button class="auth-btn-primary">Login</button>
+          </div>
+          <div class="auth-footer">
+            <p>
+              Don't have account?
+              <a href="#" onclick="showAuthScreen('auth-signup')">Register?</a>
+            </p>
+            <p>OR Login with</p>
+            <div class="social-icons">
+              <button class="social-btn google-btn">
+                <i class="fab fa-google"></i>
+              </button>
+              <button class="social-btn facebook-btn">
+                <i class="fab fa-facebook-f"></i>
+              </button>
+              <button class="social-btn twitter-btn">
+                <i class="fab fa-x-twitter"></i>
+                <!-- The new X (Twitter) icon -->
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
     <!-- The Overlay (The dark background) -->

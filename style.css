@@ -1,4 +1,29 @@
-/* 1. This enables the "Slide" effect across the whole site */
+#chapa-master-wrapper > div {
+  background-color: white !important;
+  width: 95%;
+  max-width: 420px;
+
+  /* CHANGE: Remove fixed height, use auto so it hugs the content */
+  height: auto !important;
+  min-height: auto !important;
+
+  border-radius: 20px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 20px; /* Even padding all around */
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+}
+
+/* Ensure the Chapa internal form doesn't force a huge height */
+#chapa-inline-form {
+  height: auto !important;
+  min-height: auto !important;
+}
+#chapa-master-wrapper button {
+  z-index: 10000000 !important; /* One level higher than the form */
+  pointer-events: auto !important; /* Ensures the mouse can click it */
+}
 html {
   scroll-behavior: smooth;
 }

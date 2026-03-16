@@ -1,10 +1,12 @@
 // ==========================================
-// 1. PAGE MAPPING & MASTER SWITCHER
+// 1. MASTER NAVIGATION LOGIC
 // ==========================================
 const textToPageMap = {
   home: "home-section",
   "ሐበሻ ቀሚስ": "kemis-page",
+  jewelry: "jewelry-page",
   "Habesha jewelry": "jewelry-page",
+  "Habesha Jewelry": "jewelry-page",
   ቅመማቅመም: "spices-page",
   Info: "info-page",
   "ሙሶብ (Mesob)": "mesob-page",
@@ -14,65 +16,48 @@ const textToPageMap = {
 function showPage(targetId) {
   const market = document.getElementById("market-view");
   const upload = document.getElementById("upload-page");
-  const info = document.getElementById("profile-page");
+  const profile = document.getElementById("profile-page");
 
-  // 1. Hide the three main "Page Containers"
   if (market) market.style.display = "none";
   if (upload) upload.style.display = "none";
-  if (info) info.style.display = "none";
+  if (profile) profile.style.display = "none";
 
-  // 2. Logic for showing the correct container
   if (targetId === "upload-page") {
     upload.style.display = "block";
-    window.scrollTo(0, 0); // Always start at top of upload
+    window.scrollTo(0, 0);
   } else if (targetId === "profile-page") {
-    info.style.display = "block";
-    window.scrollTo(0, 0); // Always start at top of info
+    profile.style.display = "block";
+    window.scrollTo(0, 0);
   } else {
-    // This is for Home, Dresses, Jewelry, Spices, etc.
     market.style.display = "block";
-
-    // IMPORTANT: Make sure all product sections inside the market are VISIBLE
-    // This allows you to scroll down from Home to see everything.
     const sections = market.querySelectorAll(".page-section, .hero");
-    sections.forEach((s) => {
-      s.style.display = "block";
-    });
+    sections.forEach((s) => (s.style.display = "block"));
 
-    // 3. Scroll to the specific section
     const element = document.getElementById(targetId);
     if (element) {
-      if (targetId === "home-section") {
+      if (targetId === "home-section")
         window.scrollTo({ top: 0, behavior: "smooth" });
-      } else {
-        // Scroll to the specific category (like Jewelry)
-        element.scrollIntoView({ behavior: "smooth" });
-      }
+      else element.scrollIntoView({ behavior: "smooth" });
     }
   }
 }
-// ==========================================
-// 2. NAVBAR & NAVIGATION LOGIC
-// ==========================================
+
+// Navbar & Submenu Logic
 const culturalTrigger = document.getElementById("cultural-trigger");
 const culturalMenu = document.getElementById("cultural-menu");
 
 if (culturalTrigger) {
-  culturalTrigger.addEventListener("click", function (e) {
+  culturalTrigger.addEventListener("click", (e) => {
     e.preventDefault();
     e.stopPropagation();
     culturalMenu.classList.toggle("open");
   });
 }
 
-const allLinks = document.querySelectorAll(".nav-links a, .submenu a");
-allLinks.forEach((link) => {
+document.querySelectorAll(".nav-links a, .submenu a").forEach((link) => {
   link.addEventListener("click", function (e) {
     if (this.id === "cultural-trigger") return;
-
-    const linkText = this.textContent.trim();
-    const targetSectionId = textToPageMap[linkText];
-
+    const targetSectionId = textToPageMap[this.textContent.trim()];
     if (targetSectionId) {
       e.preventDefault();
       showPage(targetSectionId);
@@ -81,143 +66,128 @@ allLinks.forEach((link) => {
   });
 });
 
-// ==========================================
-// 3. MOBILE BOTTOM NAV LOGIC
-// ==========================================
-const mobHome = document.getElementById("mob-home");
-const mobPlus = document.getElementById("mob-plus");
-const mobYou = document.getElementById("mob-you");
+// Mobile Bottom Bar Listeners
+document
+  .getElementById("mob-home")
+  ?.addEventListener("click", () => showPage("home-section"));
+document
+  .getElementById("mob-plus")
+  ?.addEventListener("click", () => showPage("upload-page"));
+document
+  .getElementById("mob-you")
+  ?.addEventListener("click", () => showPage("profile-page"));
 
-if (mobHome) mobHome.addEventListener("click", () => showPage("home-section"));
-if (mobPlus) mobPlus.addEventListener("click", () => showPage("upload-page"));
-if (mobYou) mobYou.addEventListener("click", () => showPage("profile-page"));
-
 // ==========================================
-// 4. PAYMENT MODAL LOGIC
+// 2. REAL CHAPA PAYMENT LOGIC (DIRECT)
 // ==========================================
-const cartButtons = document.querySelectorAll(".cart-btn");
-const paymentOverlay = document.getElementById("payment-overlay");
-const closeModal = document.getElementById("close-modal");
+let itemData = { name: "Product", price: "0" };
 
-cartButtons.forEach((button) => {
-  button.addEventListener("click", () => {
-    paymentOverlay.style.display = "flex";
-    document.body.style.overflow = "hidden";
-  });
-});
+// This function closes the payment window
+function closeChapa() {
+  const wrapper = document.getElementById("chapa-master-wrapper");
+  if (wrapper) wrapper.style.display = "none";
+  document.body.style.overflow = "auto";
+  document.getElementById("chapa-inline-form").innerHTML = ""; // Clear content
+}
 
-if (closeModal) {
-  closeModal.addEventListener("click", () => {
-    paymentOverlay.style.display = "none";
-    document.body.style.overflow = "auto";
+// THIS IS THE MAIN BUTTON CLICKER
+function setupCartButtons() {
+  const btns = document.querySelectorAll(".cart-btn");
+  btns.forEach((btn) => {
+    btn.onclick = function (e) {
+      e.preventDefault();
+
+      // 1. Get Data from the button's data attributes
+      itemData.name = this.getAttribute("data-name") || "Traditional Item";
+      itemData.price = this.getAttribute("data-price") || "0";
+
+      if (itemData.price === "0") {
+        alert("Error: Price missing on this button!");
+        return;
+      }
+
+      // 2. Open Chapa Directly
+      startChapaDirectly();
+    };
   });
 }
 
-window.addEventListener("click", (e) => {
-  if (e.target === paymentOverlay) {
-    paymentOverlay.style.display = "none";
-    document.body.style.overflow = "auto";
+function startChapaDirectly() {
+  // 1. Show the Master Wrapper
+  const wrapper = document.getElementById("chapa-master-wrapper");
+  wrapper.style.display = "flex";
+  document.body.style.overflow = "hidden";
+
+  // 2. Initialize Chapa
+  try {
+    const chapa = new ChapaCheckout({
+      publicKey: "pk_test_CHAPUBK_TEST-gwpvAaGZ3r8JvsO5kb9rDAocxYNOOI9G",
+      amount: itemData.price,
+      currency: "ETB",
+      txRef: "gulit-" + Date.now(),
+      email: "customer@gmail.com",
+      firstName: "Gulit",
+      title: "Buying " + itemData.name,
+      container: "chapa-inline-form",
+      onSuccessfulPayment: function (data) {
+        alert("ክፍያዎ ተሳክቷል! (Payment Success!)");
+        window.location.reload();
+      },
+      onClose: function () {
+        closeChapa();
+      },
+    });
+
+    chapa.initialize();
+  } catch (e) {
+    console.error("Chapa Error:", e);
   }
-  if (culturalTrigger && e.target !== culturalTrigger) {
-    culturalMenu.classList.remove("open");
-  }
-});
+}
 
 // ==========================================
-// 5. SEARCH LOGIC
+// 3. SEARCH, UPLOAD & AUTH LOGIC
 // ==========================================
+
+// Search Logic
 const searchInput = document.getElementById("search-input");
-const searchBtn = document.getElementById("search-btn");
-
-function performSearch() {
-  const filter = searchInput.value.toLowerCase().trim();
-  const allCards = document.querySelectorAll(".product-card");
-
-  // Ensure market is visible when searching
-  showPage("home-section");
-
-  allCards.forEach((card) => {
-    const productName = card.querySelector("h3")
-      ? card.querySelector("h3").textContent.toLowerCase()
-      : "";
-    const productLabel = card.querySelector(".product-label")
-      ? card.querySelector(".product-label").textContent.toLowerCase()
-      : "";
-
-    if (productName.includes(filter) || productLabel.includes(filter)) {
-      card.style.display = "";
-    } else {
-      card.style.display = "none";
-    }
-  });
-}
-
-if (searchBtn) searchBtn.addEventListener("click", performSearch);
 if (searchInput) {
-  searchInput.addEventListener("keyup", (e) => {
-    if (e.key === "Enter") performSearch();
-  });
   searchInput.addEventListener("input", () => {
-    if (searchInput.value === "") {
-      document
-        .querySelectorAll(".product-card")
-        .forEach((card) => (card.style.display = ""));
-    }
+    const filter = searchInput.value.toLowerCase().trim();
+    document.querySelectorAll(".product-card").forEach((card) => {
+      const label =
+        card.querySelector(".product-label")?.textContent.toLowerCase() || "";
+      card.style.display = label.includes(filter) ? "" : "none";
+    });
   });
 }
 
-// ==========================================
-// 6. SELLER UPLOAD LOGIC
-// ==========================================
-const photoInput = document.getElementById("photo-input");
-const photoPreview = document.getElementById("photo-preview");
-const uploadPlaceholder = document.getElementById("upload-placeholder");
-
-if (photoInput) {
-  photoInput.addEventListener("change", function () {
-    const file = this.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = function (e) {
-        photoPreview.src = e.target.result;
-        photoPreview.style.display = "block";
-        uploadPlaceholder.style.display = "none";
-      };
-      reader.readAsDataURL(file);
-    }
-  });
-}
-
-const catOptions = document.querySelectorAll(".cat-option");
-catOptions.forEach((opt) => {
-  opt.addEventListener("click", () => {
-    catOptions.forEach((o) => o.classList.remove("selected"));
-    opt.classList.add("selected");
-  });
-});
-
-const postBtn = document.getElementById("post-item-btn");
-if (postBtn) {
-  postBtn.addEventListener("click", () => {
-    const name = document.getElementById("upload-name").value;
-    const price = document.getElementById("upload-price").value;
-    if (name && price) {
-      alert("ምርትዎ በተሳካ ሁኔታ ተለጥፏል!");
-      showPage("home-section");
-    } else {
-      alert("እባክዎ ስም እና ዋጋ ያስገቡ");
-    }
-  });
-}
+// Auth Screen Switcher
 function showAuthScreen(screenId) {
-  // Hide all auth cards
   document.getElementById("auth-welcome").style.display = "none";
   document.getElementById("auth-signup").style.display = "none";
   document.getElementById("auth-login").style.display = "none";
+  document.getElementById(screenId).style.display = "block";
+}
 
-  // Show the requested one
-  const target = document.getElementById(screenId);
-  if (target) {
-    target.style.display = "block";
+// Run Initial Setup
+setupCartButtons();
+showPage("home-section");
+function closeChapa() {
+  console.log("Closing Chapa window...");
+
+  // 1. Find the master wrapper and hide it
+  const wrapper = document.getElementById("chapa-master-wrapper");
+  if (wrapper) {
+    wrapper.style.display = "none";
+  }
+
+  // 2. Allow the background to scroll again
+  document.body.style.overflow = "auto";
+
+  // 3. IMPORTANT: Clear the internal Chapa form
+  // This prevents errors when you try to open it again later
+  const formContainer = document.getElementById("chapa-inline-form");
+  if (formContainer) {
+    formContainer.innerHTML = "";
   }
 }

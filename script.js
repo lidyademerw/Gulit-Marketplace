@@ -144,23 +144,6 @@ function startChapaDirectly() {
   }
 }
 
-// ==========================================
-// 3. SEARCH, UPLOAD & AUTH LOGIC
-// ==========================================
-
-// Search Logic
-const searchInput = document.getElementById("search-input");
-if (searchInput) {
-  searchInput.addEventListener("input", () => {
-    const filter = searchInput.value.toLowerCase().trim();
-    document.querySelectorAll(".product-card").forEach((card) => {
-      const label =
-        card.querySelector(".product-label")?.textContent.toLowerCase() || "";
-      card.style.display = label.includes(filter) ? "" : "none";
-    });
-  });
-}
-
 // Auth Screen Switcher
 function showAuthScreen(screenId) {
   document.getElementById("auth-welcome").style.display = "none";
@@ -268,3 +251,77 @@ function buyFromZoom() {
 
 // Run the setup
 initZoomSystem();
+// ==========================================
+// SEARCH ENGINE LOGIC
+// ==========================================
+
+const searchInput = document.getElementById("search-input");
+const searchBtn = document.getElementById("search-btn");
+
+function performSearch() {
+  const filter = searchInput.value.toLowerCase().trim();
+
+  // 1. Force the Home view to show results
+  showPage("home-section");
+
+  // 2. Target each category section (Mesob, Shkla, Jewelry, etc.)
+  const sections = document.querySelectorAll(".page-section");
+
+  sections.forEach((section) => {
+    const cards = section.querySelectorAll(".product-card");
+    const separator = section.querySelector(".section-separator");
+    let sectionHasMatch = false;
+
+    cards.forEach((card) => {
+      // Check label (Ethiopic) and data-name (Latin)
+      const label =
+        card.querySelector(".product-label")?.textContent.toLowerCase() || "";
+      const name = card.getAttribute("data-name")?.toLowerCase() || "";
+
+      if (label.includes(filter) || name.includes(filter)) {
+        card.style.display = "flex"; // Show matching product
+        sectionHasMatch = true;
+      } else {
+        card.style.display = "none"; // Hide non-matching product
+      }
+    });
+
+    // 3. Handle the Green Header (Separator)
+    if (separator) {
+      if (sectionHasMatch || filter === "") {
+        section.style.display = "block"; // Show section if there's a match
+        separator.style.display = "flex";
+      } else {
+        section.style.display = "none"; // Hide entire section if no match
+      }
+    }
+  });
+
+  // 4. Handle the Hero (Welcome) section
+  const hero = document.getElementById("home-section");
+  if (hero) {
+    // Hide the welcome images when searching so results move to the top
+    hero.style.display = filter === "" ? "flex" : "none";
+  }
+}
+
+// Event: Search as you type
+if (searchInput) {
+  searchInput.addEventListener("input", performSearch);
+}
+
+// Event: Search when clicking the magnifying glass
+if (searchBtn) {
+  searchBtn.addEventListener("click", performSearch);
+}
+
+// Event: Reset search when input is empty
+if (searchInput) {
+  searchInput.addEventListener("keyup", (e) => {
+    if (searchInput.value === "") {
+      document
+        .querySelectorAll(".product-card")
+        .forEach((card) => (card.style.display = "flex"));
+    }
+  });
+}

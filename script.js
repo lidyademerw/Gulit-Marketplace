@@ -191,3 +191,80 @@ function closeChapa() {
     formContainer.innerHTML = "";
   }
 }
+// This function resets the page so you can shop again
+function closeChapaWindow() {
+  console.log("X clicked - Closing payment...");
+
+  // 1. Hide the wrapper
+  const wrapper = document.getElementById("chapa-master-wrapper");
+  if (wrapper) wrapper.style.display = "none";
+
+  // 2. Clear the payment form
+  const form = document.getElementById("chapa-inline-form");
+  if (form) form.innerHTML = "";
+
+  // 3. Allow scrolling again
+  document.body.style.overflow = "auto";
+
+  // 4. THE MAGIC FIX: Reload the page state
+  // If the library is "stuck", this is the only way to 100% reset it
+  window.location.reload();
+}
+
+// Attach the listener to the ID
+document.addEventListener("click", function (e) {
+  if (e.target && e.target.id === "final-close-btn") {
+    closeChapaWindow();
+  }
+});
+// ==========================================
+// IMAGE ZOOM LOGIC
+// ==========================================
+
+function initZoomSystem() {
+  const productImages = document.querySelectorAll(".product-card img");
+
+  productImages.forEach((img) => {
+    img.onclick = function () {
+      const card = this.closest(".product-card");
+      const name = card.querySelector(".product-label").textContent;
+      const priceText = card.querySelector(".price-text").textContent;
+      const priceVal = card
+        .querySelector(".cart-btn")
+        .getAttribute("data-price");
+
+      // 1. Fill the Zoom Modal with the right info
+      document.getElementById("zoomed-image").src = this.src;
+      document.getElementById("zoom-product-name").innerText = name;
+      document.getElementById("zoom-product-price").innerText = priceText;
+
+      // 2. Pass the price to the "Buy" button inside the zoom view
+      document
+        .getElementById("zoom-buy-btn")
+        .setAttribute("data-price", priceVal);
+      document.getElementById("zoom-buy-btn").setAttribute("data-name", name);
+
+      // 3. Show the Modal
+      document.getElementById("image-zoom-overlay").style.display = "flex";
+      document.body.style.overflow = "hidden"; // Stop background scroll
+    };
+  });
+}
+
+function closeZoom() {
+  document.getElementById("image-zoom-overlay").style.display = "none";
+  document.body.style.overflow = "auto";
+}
+
+// Function to handle the "Add to cart" click inside the zoom view
+function buyFromZoom() {
+  const btn = document.getElementById("zoom-buy-btn");
+  itemData.name = btn.getAttribute("data-name");
+  itemData.price = btn.getAttribute("data-price");
+
+  closeZoom(); // Close zoom before opening payment
+  startChapaDirectly(); // Trigger your Chapa payment!
+}
+
+// Run the setup
+initZoomSystem();

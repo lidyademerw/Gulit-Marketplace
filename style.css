@@ -1045,3 +1045,113 @@ html {
   color: #888;
   margin: 10px 0;
 }
+#final-close-btn {
+  display: block !important;
+  visibility: visible !important;
+  z-index: 2147483647 !important; /* THE HIGHEST PRIORITY */
+  pointer-events: auto !important; /* Forces the mouse to see the button */
+}
+/* --- Product Zoom Styling --- */
+.zoom-modal {
+  display: none;
+  position: fixed;
+  z-index: 500000;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  /* ATTRACTIVE COLORS HERE */
+  background-color: rgba(255, 255, 255, 0.4); /* Soft white tint */
+  backdrop-filter: blur(15px); /* Modern blur effect for the background */
+  -webkit-backdrop-filter: blur(15px); /* Support for Safari */
+
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 20px;
+}
+
+/* Make the text darker since the background is now light */
+.zoom-details h2 {
+  color: #2d8a3d;
+  font-size: 28px;
+}
+.zoom-details p {
+  color: #333;
+  font-weight: bold;
+  font-size: 20px;
+}
+.close-zoom {
+  color: #333;
+} /* Darker close button */
+
+/* Make the text darker since the background is now light */
+.zoom-details h2 {
+  color: #2d8a3d;
+  font-size: 28px;
+}
+.zoom-details p {
+  color: #333;
+  font-weight: bold;
+  font-size: 20px;
+}
+.close-zoom {
+  color: #333;
+} /* Darker close button */
+
+.zoom-container {
+  max-width: 500px;
+  width: 100%;
+  text-align: center;
+  animation: zoomIn 0.3s ease-out; /* Smooth pop-in effect */
+}
+
+@keyframes zoomIn {
+  from {
+    transform: scale(0.7);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+#zoomed-image {
+  width: 100%;
+  max-height: 70vh;
+  object-fit: contain;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.zoom-details {
+  color: white;
+  margin-top: 20px;
+}
+
+.zoom-details h2 {
+  color: #2d8a3d;
+  margin-bottom: 5px;
+}
+
+.close-zoom {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  color: #333; /* Dark gray for visibility */
+  background: white; /* Round white circle for the X */
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 30px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.close-zoom:hover {
+  color: #ce3a3a;
+}

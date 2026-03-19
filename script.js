@@ -1,15 +1,17 @@
 // ==========================================
-// 1. GLOBAL STATE & CONFIG
+// GLOBAL STATE
 // ==========================================
-let itemData = { name: "Product", price: "0" };
+let cart = [];
+let itemData = { name: "Order", price: 0 };
 let selectedCategory = "";
 
+// ==========================================
+// 1. NAVIGATION & SEARCH
+// ==========================================
 const textToPageMap = {
   home: "home-section",
   "Habesha Dresses": "kemis-page",
   jewelry: "jewelry-page",
-  "Habesha jewelry": "jewelry-page",
-  "Habesha Jewelry": "jewelry-page",
   Spices: "spices-page",
   Info: "info-page",
   "ሙሶብ (Mesob)": "mesob-page",
@@ -17,70 +19,74 @@ const textToPageMap = {
 };
 
 // ==========================================
-// 2. MASTER NAVIGATION LOGIC
+// FINAL MASTER NAVIGATION
 // ==========================================
+
 function showPage(targetId) {
   const market = document.getElementById("market-view");
   const upload = document.getElementById("upload-page");
   const profile = document.getElementById("profile-page");
 
-  // Hide the three master containers
-  if (market) market.style.display = "none";
-  if (upload) upload.style.display = "none";
-  if (profile) profile.style.display = "none";
+  console.log("Navigating to: " + targetId);
 
-  if (targetId === "upload-page") {
-    if (upload) upload.style.display = "block";
-  } else if (targetId === "profile-page") {
-    if (profile) {
-      profile.style.display = "block";
-      checkAuthStatus(); // Decision: show Login or Dashboard
-    }
-  } else {
-    // Show Market and Categories
-    if (market) {
-      market.style.display = "block";
-      const internal = market.querySelectorAll(".page-section, .hero");
-      internal.forEach((s) => (s.style.display = "block"));
+  // 1. Logic for Standalone Pages (Upload & Profile)
+  if (targetId === "upload-page" || targetId === "profile-page") {
+    if (market) market.style.display = "none";
+    if (upload)
+      upload.style.display = targetId === "upload-page" ? "block" : "none";
+    if (profile)
+      profile.style.display = targetId === "profile-page" ? "block" : "none";
+    window.scrollTo(0, 0); // Jump to top
+    return; // Stop here
+  }
 
-      const element = document.getElementById(targetId);
-      if (element) {
-        if (targetId === "home-section")
-          window.scrollTo({ top: 0, behavior: "smooth" });
-        else element.scrollIntoView({ behavior: "smooth" });
-      }
+  // 2. Logic for Marketplace Sections (Home, Jewelry, Spices, Info)
+  if (market) {
+    market.style.display = "block";
+    if (upload) upload.style.display = "none";
+    if (profile) profile.style.display = "none";
+
+    // Make all internal sections visible for the scroll
+    const sections = market.querySelectorAll(".page-section, .hero");
+    sections.forEach((s) => (s.style.display = "block"));
+
+    // 3. THE SCROLL FIX
+    const targetElement = document.getElementById(targetId);
+    if (targetElement) {
+      // Give the browser a moment to make sure market-view is visible
+      setTimeout(() => {
+        targetElement.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }, 50);
     }
   }
 }
-// --- 1. Master Nav Click Handler ---
-document.querySelectorAll(".nav-links a, .submenu a").forEach((link) => {
-  link.addEventListener("click", function (e) {
-    // If it's the 'cultural materials' trigger, just toggle the menu
-    if (this.id === "cultural-trigger") {
-      e.preventDefault();
-      e.stopPropagation();
-      document.getElementById("cultural-menu").classList.toggle("open");
-      return;
-    }
 
-    // Otherwise, get the target page from the 'data-page' attribute
-    const targetPageId = this.getAttribute("data-page");
-    if (targetPageId) {
-      e.preventDefault();
-      showPage(targetPageId);
+// Ensure all links (Desktop & Submenu) use the script
+document.addEventListener("DOMContentLoaded", () => {
+  const navLinks = document.querySelectorAll(
+    ".nav-item, .sub-item, .mobile-nav-btn",
+  );
 
-      // Close the submenu if it was open
-      document.getElementById("cultural-menu")?.classList.remove("open");
-    }
+  navLinks.forEach((link) => {
+    link.addEventListener("click", function (e) {
+      // Get ID from data-page attribute we added earlier
+      const pageId = this.getAttribute("data-page");
+
+      if (pageId) {
+        e.preventDefault();
+        showPage(pageId);
+
+        // Close dropdown if it's open
+        document.getElementById("cultural-menu")?.classList.remove("open");
+      }
+    });
   });
 });
-
-// Close submenu if user clicks anywhere else on the screen
-window.addEventListener("click", () => {
-  document.getElementById("cultural-menu")?.classList.remove("open");
-});
 // ==========================================
-// 3. AUTHENTICATION LOGIC (YOU TAB)
+// 2. AUTHENTICATION (YOU TAB)
 // ==========================================
 function showAuthScreen(screenId) {
   const screens = [
@@ -98,11 +104,10 @@ function showAuthScreen(screenId) {
 function checkAuthStatus() {
   const isLoggedIn = localStorage.getItem("isLoggedIn");
   const userName = localStorage.getItem("currentUser");
-  const userDisplay = document.getElementById("user-display-name");
-
   if (isLoggedIn === "true") {
     showAuthScreen("auth-dashboard");
-    if (userDisplay) userDisplay.innerText = "Welcome, " + userName + "!";
+    const display = document.getElementById("user-display-name");
+    if (display) display.innerText = "Welcome, " + userName + "!";
   } else {
     showAuthScreen("auth-welcome");
   }
@@ -112,84 +117,111 @@ function handleSignup() {
   const name = document.getElementById("signup-name").value.trim();
   const email = document.getElementById("signup-email").value.trim();
   const pass = document.getElementById("signup-pass").value.trim();
-  const errorLine = document.getElementById("signup-error-line");
-
-  if (!name || !email || !pass) {
-    if (errorLine) {
-      errorLine.innerText = "⚠️ እባክዎን ሁሉንም ቦታዎች ይሙሉ (Fill all fields)";
-      errorLine.style.display = "block";
-    }
-    return;
+  if (name && email && pass) {
+    localStorage.setItem(email, JSON.stringify({ name, email, pass }));
+    alert("Signup Successful! Please Login.");
+    showAuthScreen("auth-login");
+  } else {
+    alert("Please fill all fields!");
   }
-  localStorage.setItem(email, JSON.stringify({ name, email, pass }));
-  alert("Signup Successful! Please Login.");
-  showAuthScreen("auth-login");
 }
 
 function handleLogin() {
   const email = document.getElementById("login-email").value.trim();
   const pass = document.getElementById("login-pass").value.trim();
-  const errorLine = document.getElementById("login-error");
-
-  const savedData = localStorage.getItem(email);
-  if (savedData) {
-    const user = JSON.parse(savedData);
+  const saved = localStorage.getItem(email);
+  if (saved) {
+    const user = JSON.parse(saved);
     if (user.pass === pass) {
       localStorage.setItem("isLoggedIn", "true");
       localStorage.setItem("currentUser", user.name);
       checkAuthStatus();
     } else {
-      if (errorLine) {
-        errorLine.innerText = "❌ Wrong password";
-        errorLine.style.display = "block";
-      }
+      alert("Wrong password!");
     }
   } else {
-    if (errorLine) {
-      errorLine.innerText = "🔍 Account not found";
-      errorLine.style.display = "block";
-    }
+    alert("User not found!");
   }
 }
 
 function handleLogout() {
   localStorage.removeItem("isLoggedIn");
   localStorage.removeItem("currentUser");
-  checkAuthStatus();
+  location.reload();
 }
 
 // ==========================================
-// 4. CHAPA PAYMENT LOGIC
+// 3. SHOPPING CART SYSTEM
 // ==========================================
-function closeChapa() {
-  const wrapper = document.getElementById("chapa-master-wrapper");
-  if (wrapper) wrapper.style.display = "none";
-  document.body.style.overflow = "auto";
-  document.getElementById("chapa-inline-form").innerHTML = "";
+function toggleCart() {
+  const sidebar = document.getElementById("cart-sidebar");
+  const overlay = document.getElementById("cart-overlay");
+  const isOpen = sidebar.style.right === "0px";
+  sidebar.style.right = isOpen ? "-400px" : "0px";
+  overlay.style.display = isOpen ? "none" : "block";
 }
 
-function startChapaDirectly() {
-  const wrapper = document.getElementById("chapa-master-wrapper");
-  if (wrapper) {
-    wrapper.style.display = "flex";
-    document.body.style.overflow = "hidden";
-  }
+function addToCart(btn) {
+  const name = btn.getAttribute("data-name");
+  const price = parseInt(btn.getAttribute("data-price"));
+  const img = btn.closest(".product-card").querySelector("img").src;
+  cart.push({ name, price, img });
+  updateCartUI();
+  toggleCart();
+}
 
+function updateCartUI() {
+  const list = document.getElementById("cart-items-list");
+  const totalDisplay = document.getElementById("cart-total-price");
+  list.innerHTML = "";
+  let total = 0;
+  cart.forEach((item, index) => {
+    total += item.price;
+    list.innerHTML += `
+            <div style="display:flex; gap:15px; margin-bottom:15px; align-items:center; border-bottom:1px solid #eee; padding-bottom:10px;">
+                <img src="${item.img}" style="width:60px; height:60px; border-radius:8px; object-fit:cover;">
+                <div style="flex:1;">
+                    <h4 style="margin:0; font-size:14px;">${item.name}</h4>
+                    <p style="margin:5px 0; color:#2d8a3d; font-weight:bold;">${item.price} ETB</p>
+                    <button onclick="removeItem(${index})" style="color:red; background:none; border:none; cursor:pointer; font-size:12px;">Remove</button>
+                </div>
+            </div>`;
+  });
+  totalDisplay.innerText = total + " Birr";
+  itemData.price = total;
+}
+
+function removeItem(index) {
+  cart.splice(index, 1);
+  updateCartUI();
+}
+
+// ==========================================
+// 4. CHAPA PAYMENT & ZOOM
+// ==========================================
+function checkoutNow() {
+  if (cart.length === 0) return alert("Your cart is empty!");
+  toggleCart();
+  const wrapper = document.getElementById("chapa-master-wrapper");
+  wrapper.style.display = "flex";
+  document.body.style.overflow = "hidden";
   try {
     const chapa = new ChapaCheckout({
       publicKey: "pk_test_CHAPUBK_TEST-gwpvAaGZ3r8JvsO5kb9rDAocxYNOOI9G",
-      amount: itemData.price,
+      amount: itemData.price.toString(),
       currency: "ETB",
       txRef: "gulit-" + Date.now(),
       email: "customer@gmail.com",
       firstName: "Gulit",
-      title: "Buying " + itemData.name,
       container: "chapa-inline-form",
       onSuccessfulPayment: () => {
-        alert("Success!");
+        alert("Payment Success!");
         location.reload();
       },
-      onClose: () => closeChapa(),
+      onClose: () => {
+        wrapper.style.display = "none";
+        document.body.style.overflow = "auto";
+      },
     });
     chapa.initialize();
   } catch (e) {
@@ -198,39 +230,50 @@ function startChapaDirectly() {
 }
 
 // ==========================================
-// 5. SEARCH & IMAGE ZOOM
+// 5. INITIALIZATION
 // ==========================================
-function performSearch() {
-  const filter = document
-    .getElementById("search-input")
-    .value.toLowerCase()
-    .trim();
-  showPage("home-section");
+// ==========================================
+// 5. MASTER INITIALIZATION (EVERYTHING STARTS HERE)
+// ==========================================
+document.addEventListener("DOMContentLoaded", () => {
+  // A. Initial Login Check
+  checkAuthStatus();
 
-  const sections = document.querySelectorAll(".page-section");
-  sections.forEach((section) => {
-    const cards = section.querySelectorAll(".product-card");
-    const separator = section.querySelector(".section-separator");
-    let sectionHasMatch = false;
+  // B. Cultural Materials Dropdown Trigger
+  const trigger = document.getElementById("cultural-trigger");
+  const menu = document.getElementById("cultural-menu");
 
-    cards.forEach((card) => {
-      const label =
-        card.querySelector(".product-label")?.textContent.toLowerCase() || "";
-      const name = card.getAttribute("data-name")?.toLowerCase() || "";
-      if (label.includes(filter) || name.includes(filter)) {
-        card.style.display = "flex";
-        sectionHasMatch = true;
-      } else {
-        card.style.display = "none";
-      }
+  if (trigger && menu) {
+    trigger.addEventListener("click", function (e) {
+      e.preventDefault();
+      e.stopPropagation(); // Prevents it from closing immediately
+      menu.classList.toggle("open");
     });
-    if (separator)
-      separator.style.display =
-        sectionHasMatch || filter === "" ? "flex" : "none";
-  });
-}
+  }
 
-function initZoomSystem() {
+  // C. All Navigation Links (Main Nav + Submenu + Mobile)
+  // This finds every element with 'data-page' and makes it a button
+  const navItems = document.querySelectorAll("[data-page]");
+  navItems.forEach((item) => {
+    item.onclick = function (e) {
+      e.preventDefault();
+      const targetId = this.getAttribute("data-page");
+      if (targetId) {
+        showPage(targetId); // Jump to section
+        menu?.classList.remove("open"); // Close dropdown if open
+      }
+    };
+  });
+
+  // D. Close Dropdown if user clicks anywhere else on screen
+  window.onclick = () => menu?.classList.remove("open");
+
+  // E. Link Cart Buttons
+  document.querySelectorAll(".cart-btn").forEach((btn) => {
+    btn.onclick = () => addToCart(btn);
+  });
+
+  // F. Link Product Image Zoom
   document.querySelectorAll(".product-card img").forEach((img) => {
     img.onclick = function () {
       const card = this.closest(".product-card");
@@ -243,175 +286,41 @@ function initZoomSystem() {
       document.body.style.overflow = "hidden";
     };
   });
-}
 
-// ==========================================
-// 6. INITIALIZATION & EVENT LISTENERS
-// ==========================================
-document.addEventListener("DOMContentLoaded", () => {
-  // Check Auth
-  checkAuthStatus();
-
-  // Bottom Nav
-  document
-    .getElementById("mob-home")
-    ?.addEventListener("click", () => showPage("home-section"));
-  document
-    .getElementById("mob-plus")
-    ?.addEventListener("click", () => showPage("upload-page"));
-  document
-    .getElementById("mob-you")
-    ?.addEventListener("click", () => showPage("profile-page"));
-
-  // Top Nav Category Click
-  document.querySelectorAll(".nav-links a, .submenu a").forEach((link) => {
-    link.addEventListener("click", function (e) {
-      if (this.id === "cultural-trigger") return;
-      const target = textToPageMap[this.textContent.trim()];
-      if (target) {
-        e.preventDefault();
-        showPage(target);
-      }
-    });
-  });
-
-  // Search
-  document
-    .getElementById("search-input")
-    ?.addEventListener("input", performSearch);
-
-  // Cart Buttons
-  document.querySelectorAll(".cart-btn").forEach((btn) => {
-    btn.onclick = function (e) {
-      e.preventDefault();
-      itemData.name = this.getAttribute("data-name") || "Item";
-      itemData.price = this.getAttribute("data-price") || "0";
-      startChapaDirectly();
-    };
-  });
-
-  // Upload Photo Preview
-  document
-    .getElementById("photo-input")
-    ?.addEventListener("change", function () {
-      const file = this.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          const prev = document.getElementById("photo-preview");
-          prev.src = e.target.result;
-          prev.style.display = "block";
-          document.getElementById("upload-placeholder").style.display = "none";
-        };
-        reader.readAsDataURL(file);
-      }
-    });
-
-  // Category Picker logic
+  // G. Category Picker (Upload Page)
   document.querySelectorAll(".cat-option").forEach((opt) => {
-    opt.addEventListener("click", () => {
+    opt.onclick = () => {
       document
         .querySelectorAll(".cat-option")
         .forEach((o) => o.classList.remove("selected"));
       opt.classList.add("selected");
       selectedCategory = opt.getAttribute("data-value");
-    });
+    };
   });
-
-  initZoomSystem();
 });
-
-// Helper for closing Zoom
+// 1. The Function that actually hides the zoom
 function closeZoom() {
-  document.getElementById("image-zoom-overlay").style.display = "none";
-  document.body.style.overflow = "auto";
-}
-// This function resets the page so you can shop again
-function handleFinalClose() {
-  console.log("Emergency Close Clicked!");
-
-  // 1. Hide the Chapa master wrapper
-  const wrapper = document.getElementById("chapa-master-wrapper");
-  if (wrapper) wrapper.style.display = "none";
-
-  // 2. Allow the body to scroll again
-  document.body.style.overflow = "auto";
-
-  // 3. THE MAGIC TRICK: Reload the page
-  // Because Chapa's script "hijacks" the browser, a refresh is
-  // the only 100% workable way to let the user go back to home.
-  window.location.reload();
-}
-
-// Attach the click event to the ID
-document.addEventListener("click", function (e) {
-  // Check if the clicked element (or its parent) has our ID
-  if (e.target && e.target.id === "emergency-close-btn") {
-    handleFinalClose();
+  console.log("Closing Product Zoom...");
+  const overlay = document.getElementById("image-zoom-overlay");
+  if (overlay) {
+    overlay.style.display = "none";
   }
-});
-// ==========================================
-// 7. POST ITEM SUBMISSION LOGIC
-// ==========================================
-
-function initPostItemLogic() {
-  const postBtn = document.getElementById("post-item-btn");
-  const errorLine = document.getElementById("upload-error-msg");
-
-  if (!postBtn) return;
-
-  postBtn.addEventListener("click", () => {
-    // 1. Get input values
-    const nameInput = document.getElementById("upload-name");
-    const priceInput = document.getElementById("upload-price");
-    const photoInput = document.getElementById("photo-input");
-
-    const name = nameInput.value.trim();
-    const price = priceInput.value.trim();
-    const hasPhoto = photoInput.files.length > 0;
-
-    // 2. Clear old errors
-    if (errorLine) {
-      errorLine.style.display = "none";
-      errorLine.innerText = "";
-    }
-
-    // 3. Validation Check
-    if (!name || !price || !selectedCategory || !hasPhoto) {
-      if (errorLine) {
-        errorLine.innerText =
-          "እባክዎ ሁሉንም መረጃዎች በትክክል ያስገቡ (Please fill all fields and add a photo)";
-        errorLine.style.display = "block";
-
-        // Small vibration effect for errors
-        errorLine.style.animation = "shake 0.3s";
-        setTimeout(() => (errorLine.style.animation = ""), 300);
-      }
-      return;
-    }
-
-    // 4. Success Logic (Simulation)
-    alert("ምርትዎ በተሳካ ሁኔታ ተለጥፏል! (Success! Your item is posted)");
-
-    // 5. RESET THE FORM
-    nameInput.value = "";
-    priceInput.value = "";
-    photoInput.value = ""; // Clear file selector
-    document.getElementById("photo-preview").style.display = "none";
-    document.getElementById("upload-placeholder").style.display = "block";
-
-    // Deselect Category buttons
-    document
-      .querySelectorAll(".cat-option")
-      .forEach((o) => o.classList.remove("selected"));
-    selectedCategory = "";
-
-    // 6. Automatically go back to Home
-    showPage("home-section");
-  });
+  document.body.style.overflow = "auto"; // Re-enable scrolling
 }
 
-// Ensure this runs when the page loads
+// 2. Attach the click listener to the X button
+// We do this inside a separate listener to be 100% sure it works
 document.addEventListener("DOMContentLoaded", () => {
-  initPostItemLogic();
+  const closeBtn = document.getElementById("btn-close-zoom");
+  if (closeBtn) {
+    closeBtn.onclick = closeZoom;
+  }
+
+  // EXTRA FEATURE: Close zoom if they click the background (outside the image)
+  const overlay = document.getElementById("image-zoom-overlay");
+  overlay.onclick = function (e) {
+    if (e.target === overlay) {
+      closeZoom();
+    }
+  };
 });

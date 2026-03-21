@@ -1,6 +1,5 @@
-// ==========================================
 // GLOBAL STATE
-// ==========================================
+
 let cart = [];
 let itemData = { name: "Order", price: 0 };
 let selectedCategory = "";
@@ -46,7 +45,6 @@ function showPage(targetId) {
     if (upload) upload.style.display = "none";
     if (profile) profile.style.display = "none";
 
-    // Make all internal sections visible for the scroll
     const sections = market.querySelectorAll(".page-section, .hero");
     sections.forEach((s) => (s.style.display = "block"));
 
@@ -62,6 +60,66 @@ function showPage(targetId) {
       }, 50);
     }
   }
+  // ==========================================
+  // POST ITEM LOGIC
+  // ==========================================
+
+  function initPostItem() {
+    const postBtn = document.getElementById("post-item-btn");
+    const errorLine = document.getElementById("upload-error-msg");
+
+    if (!postBtn) return;
+
+    postBtn.addEventListener("click", () => {
+      // 1. Get current values from the form
+      const nameInput = document.getElementById("upload-name");
+      const priceInput = document.getElementById("upload-price");
+      const photoInput = document.getElementById("photo-input");
+
+      const name = nameInput.value.trim();
+      const price = priceInput.value.trim();
+      const hasPhoto = photoInput.files.length > 0;
+
+      // 2. Reset error line
+      errorLine.style.display = "none";
+      errorLine.innerText = "";
+
+      // 3. VALIDATION: Check if everything is filled
+      // 'selectedCategory' should be the global variable from your category picker
+      if (!name || !price || !selectedCategory || !hasPhoto) {
+        errorLine.innerText =
+          "⚠️ እባክዎ ሁሉንም መረጃዎች በትክክል ያስገቡ (Please fill all fields and add a photo)";
+        errorLine.style.display = "block";
+        return;
+      }
+
+      // 4. SUCCESS: Simulate posting
+      alert("ምርትዎ በተሳካ ሁኔታ ተለጥፏል! (Success! Your item is posted)");
+
+      // 5. RESET FORM for next time
+      nameInput.value = "";
+      priceInput.value = "";
+      photoInput.value = ""; // Clear file
+      document.getElementById("photo-preview").style.display = "none";
+      document.getElementById("upload-placeholder").style.display = "block";
+
+      // Unselect categories
+      document
+        .querySelectorAll(".cat-option")
+        .forEach((opt) => opt.classList.remove("selected"));
+      selectedCategory = "";
+
+      // 6. Navigate back to Home
+      showPage("home-section");
+    });
+  }
+
+  // MAKE SURE THIS RUNS IN YOUR DOMContentLoaded
+  document.addEventListener("DOMContentLoaded", () => {
+    // ... your other setup calls ...
+    initPostItem();
+  });
+  
 }
 
 // Ensure all links (Desktop & Submenu) use the script
@@ -72,7 +130,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   navLinks.forEach((link) => {
     link.addEventListener("click", function (e) {
-      // Get ID from data-page attribute we added earlier
       const pageId = this.getAttribute("data-page");
 
       if (pageId) {
@@ -230,9 +287,6 @@ function checkoutNow() {
 }
 
 // ==========================================
-// 5. INITIALIZATION
-// ==========================================
-// ==========================================
 // 5. MASTER INITIALIZATION (EVERYTHING STARTS HERE)
 // ==========================================
 document.addEventListener("DOMContentLoaded", () => {
@@ -252,7 +306,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // C. All Navigation Links (Main Nav + Submenu + Mobile)
-  // This finds every element with 'data-page' and makes it a button
   const navItems = document.querySelectorAll("[data-page]");
   navItems.forEach((item) => {
     item.onclick = function (e) {
@@ -323,4 +376,24 @@ document.addEventListener("DOMContentLoaded", () => {
       closeZoom();
     }
   };
+});
+// --- THE EMERGENCY RESET BUTTON ---
+document.addEventListener("click", function (e) {
+  // We check if the click was on the button OR the "X" symbol inside it
+  if (
+    e.target &&
+    (e.target.id === "ultimate-close-btn" ||
+      e.target.parentElement.id === "ultimate-close-btn")
+  ) {
+    console.log("User requested emergency exit. Resetting app...");
+
+    // 1. Instantly hide the payment UI
+    const wrapper = document.getElementById("chapa-master-wrapper");
+    if (wrapper) wrapper.style.display = "none";
+
+    // 2. Allow the page to scroll again
+    document.body.style.overflow = "auto";
+
+    window.location.reload();
+  }
 });

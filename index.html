@@ -733,7 +733,11 @@
               <p class="product-label">Cross Necklace</p>
               <p class="price-text">price 2500Birr</p>
             </div>
-            <button class="cart-btn">
+            <button
+              class="cart-btn"
+              data-name="Cross Necklace"
+              data-price="2500"
+            >
               <img
                 src="https://img.icons8.com/ios/24/000000/shopping-cart.png"
                 alt="cart"
@@ -1444,21 +1448,23 @@
     </div>
     <!-- 1. THE MOBILE BOTTOM NAV (Placed at the end is fine) -->
     <div class="mobile-bottom-nav">
-      <button class="mobile-nav-btn" id="mob-home">
+      <!-- Button 1: Home -->
+      <button class="mobile-nav-btn" data-page="home-section">
         <span class="nav-icon">🏠</span>
         <span class="nav-text">home</span>
       </button>
 
-      <button class="mobile-nav-btn" id="mob-plus">
+      <!-- Button 2: Plus (+) -->
+      <button class="mobile-nav-btn" data-page="upload-page">
         <span class="nav-icon plus-icon">+</span>
       </button>
 
-      <button class="mobile-nav-btn" id="mob-you">
+      <!-- Button 3: You -->
+      <button class="mobile-nav-btn" data-page="profile-page">
         <span class="nav-icon">👤</span>
         <span class="nav-text">you</span>
       </button>
     </div>
-
     <!-- 2. THE UPLOAD PAGE (Hidden by default so it doesn't show at the bottom) -->
     <section id="upload-page" class="page-section" style="display: none">
       <div class="section-separator">
@@ -1506,8 +1512,8 @@
           </div>
           <p
             id="upload-error-msg"
-            class="error-msg-inline"
-            style="display: none"
+            class="auth-error-text"
+            style="color: red; margin-bottom: 10px"
           ></p>
           <button id="post-item-btn" class="main-post-btn">
             ይለጥፉ (Post Item)
@@ -1622,8 +1628,9 @@
       "
     >
       <!-- THE X BUTTON IS NOW OUTSIDE THE WHITE BOX TO AVOID THE 'INVISIBLE WALL' -->
+      <!-- Inside chapa-master-wrapper -->
       <button
-        id="force-exit-chapa"
+        id="ultimate-close-btn"
         style="
           position: fixed;
           top: 20px;

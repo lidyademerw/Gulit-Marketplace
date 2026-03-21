@@ -1001,8 +1001,7 @@ html {
   color: #bbb;
   margin-top: 20px;
 }
-/* Center the icon inside the round button */
-/* Style for the images inside buttons */
+
 .social-img {
   width: 24px; /* Size of the logo */
   height: 24px;
@@ -1620,7 +1619,7 @@ html {
   position: absolute;
   top: 20px;
   right: 30px;
-  z-index: 600000 !important; /* Higher than the background overlay */
+  z-index: 600000 !important; 
   cursor: pointer;
   background: white;
   width: 45px;
@@ -1632,5 +1631,5 @@ html {
   font-size: 30px;
   color: #333;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  pointer-events: auto !important; /* Forces the mouse to see the button */
+  pointer-events: auto !important; 
 }
